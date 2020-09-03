@@ -1,0 +1,33 @@
+[package]
+name = "x86_64_structs"
+authors = [
+    "Gerd Zellweger <mail@gerdzellweger.com>",
+    "Eric Kidd <git@randomhacks.net>",
+    "Philipp Oppermann <dev@phil-opp.com>",
+    "Dan Schatzberg <schatzberg.dan@gmail.com>",
+    "John Ericson <John_Ericson@Yahoo.com>",
+    "Rex Lunae <rexlunae@gmail.com>",
+]
+description = "Support for x86_64 specific instructions, registers, and structures."
+keywords = [
+    "amd64",
+    "x86",
+    "x86_64",
+    "no_std",
+]
+categories = [
+    "no-std",
+]
+license = "MIT/Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/memflow/x86_64_structs"
+version = "0.11.5"
+edition = "2018"
+
+[dependencies]
+bit_field = "0.9.0"
+bitflags = "1.0.4"
+array-init = { version = "0.1.1" }
+
+[features]
+const_fn = []

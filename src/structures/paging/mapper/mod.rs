@@ -1,7 +1,6 @@
 //! Abstractions for reading and modifying the mapping of pages.
 
 pub use self::mapped_page_table::{MappedPageTable, PhysToVirt};
-#[cfg(target_arch = "x86_64")]
 pub use self::offset_page_table::OffsetPageTable;
 
 use crate::structures::paging::{

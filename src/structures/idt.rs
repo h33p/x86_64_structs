@@ -410,37 +410,6 @@ impl InterruptDescriptorTable {
         *self = Self::new();
     }
 
-    /// Loads the IDT in the CPU using the `lidt` command.
-    #[cfg(target_arch = "x86_64")]
-    #[inline]
-    pub fn load(&'static self) {
-        unsafe { self.load_unsafe() }
-    }
-
-    /// Loads the IDT in the CPU using the `lidt` command.
-    ///
-    /// # Safety
-    ///
-    /// As long as it is the active IDT, you must ensure that:
-    ///
-    /// - `self` is never destroyed.
-    /// - `self` always stays at the same memory location. It is recommended to wrap it in
-    /// a `Box`.
-    ///
-    #[cfg(target_arch = "x86_64")]
-    #[inline]
-    pub unsafe fn load_unsafe(&self) {
-        use crate::instructions::tables::{lidt, DescriptorTablePointer};
-        use core::mem::size_of;
-
-        let ptr = DescriptorTablePointer {
-            base: self as *const _ as u64,
-            limit: (size_of::<Self>() - 1) as u16,
-        };
-
-        lidt(&ptr);
-    }
-
     /// Returns a normalized and ranged check slice range from a RangeBounds trait object
     ///
     /// Panics if range is outside the range of user interrupts (i.e. greater than 255) or if the entry is an
@@ -595,33 +564,10 @@ impl<F> Entry<F> {
             phantom: PhantomData,
         }
     }
-
-    /// Set the handler address for the IDT entry and sets the present bit.
-    ///
-    /// For the code selector field, this function uses the code segment selector currently
-    /// active in the CPU.
-    ///
-    /// The function returns a mutable reference to the entry's options that allows
-    /// further customization.
-    #[cfg(target_arch = "x86_64")]
-    #[inline]
-    fn set_handler_addr(&mut self, addr: u64) -> &mut EntryOptions {
-        use crate::instructions::segmentation;
-
-        self.pointer_low = addr as u16;
-        self.pointer_middle = (addr >> 16) as u16;
-        self.pointer_high = (addr >> 32) as u32;
-
-        self.gdt_selector = segmentation::cs().0;
-
-        self.options.set_present(true);
-        &mut self.options
-    }
 }
 
 macro_rules! impl_set_handler_fn {
     ($h:ty) => {
-        #[cfg(target_arch = "x86_64")]
         impl Entry<$h> {
             /// Set the handler function for the IDT entry and sets the present bit.
             ///

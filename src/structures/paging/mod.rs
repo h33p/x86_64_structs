@@ -8,7 +8,6 @@ pub use self::frame_alloc::UnusedPhysFrame;
 pub use self::frame_alloc::{FrameAllocator, FrameDeallocator};
 #[doc(no_inline)]
 pub use self::mapper::MappedPageTable;
-#[cfg(target_arch = "x86_64")]
 #[doc(no_inline)]
 pub use self::mapper::OffsetPageTable;
 pub use self::mapper::{Mapper, MapperAllSizes};
